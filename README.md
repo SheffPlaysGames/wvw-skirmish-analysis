@@ -10,6 +10,7 @@ Interpret at your own risk, with that caveat in mind.
 ## Contents
 
 - `skirmish_analysis.py`: Main Python script for parsing match JSON data, engineering features, and exporting summarized CSV files.
+- match_skirmish_data_2887.json: Example of the .json structure returned by kills.werdes.net.
 - `README.md`: This file.
 
 ## Features Engineered
