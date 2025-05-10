@@ -28,11 +28,12 @@ I've also attempted to infer when there's sporadic API downtime based on periods
 - Run skirmish_analysis.py and wait about an hour and a half while the initial data compiles itself.
 - You can add subsequent skirmishes as they happen by re-running skirmish_analysis.py.
 
-- Directory structure of the code should be:
-- /{name of your directory}
--   skirmish_analysis.py
--   /World vs. World Per Match JSON Files
--   /World vs. World .csv Fragments
+Directory structure of the code should be:
+
+/{name of your directory}
+  skirmish_analysis.py
+  /World vs. World Per Match JSON Files
+  /World vs. World .csv Fragments
 
 ## Future Plans
 
