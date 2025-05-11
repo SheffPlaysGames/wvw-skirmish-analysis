@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "wvw-skirmish-analysis"
+version = "0.1.0"
+description = ""
+authors = ["Sheff <sheffplaysgames@gmail.com>"]
+license = "CC0"
+readme = "README.md"
+packages = [{include = "wvw_skirmish_analysis"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+requests = "^2.32.3"
+pandas = "^2.2.3"
+
+
+[tool.poetry.group.dev.dependencies]
+autopep8 = "^2.3.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
