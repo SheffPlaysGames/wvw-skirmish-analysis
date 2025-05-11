@@ -41,7 +41,6 @@ If you want to take a crack at it, you can email me: sheffplaysgames@gmail.com |
 ## Caveats
 - "API Downtime" is a very hacky approach right now. See the features engineered section.
 - API data consistently disagrees with the in-game UI on kills/deaths. There's nothing that can be done about this.
-- 
 
 ## Requirements
 
