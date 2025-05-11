@@ -10,9 +10,11 @@ Interpret at your own risk, with that caveat in mind.
 ## Contents
 
 - `skirmish_analysis.py`: Main Python script for parsing match JSON data, engineering features, and exporting summarized CSV files.
-- World vs. World Per Match JSON Files: Expected file folder with an example of a match skirmish included.
-- World vs. World .csv Fragments: Expected file folder with an example of a .csv fragment that skirmish_analysis.py produces.
+- wvw_per_match_json_files: Expected file folder with an example of a match skirmish included.
+- wvw_per_match_csv_files: Expected file folder with an example of a .csv fragment that skirmish_analysis.py produces.
+- merged: Expected file folder with the completed csv/json files.
 - `README.md`: This file.
+- pyproject.toml: Python Poetry package requirements data ( https://python-poetry.org/docs/#installing-with-the-official-installer )
 
 If you don't want the code, and you just want the data, you can access the current version of the main .csv file here:
 https://mega.nz/folder/eJNmFYpR#ao9zp_t4Aek7v73xTFSQzA
@@ -24,6 +26,10 @@ They also contain teamname, team color, link team name, tier, and region.
 I've also constructed extra information on skirmish ID (absolute and relative), day of week, hour, and any running events/holidays.
 I've also attempted to infer when there's sporadic API downtime based on periods where kills and deaths are both zero, but this is very hacky.
 A single instance of "API Downtime" is probably fine, but multiple skirmishes that all return "API Downtime" probably shouldn't be trusted.
+
+## Python Prerequsites
+
+The script requires pandas and requests.  Install them via your package manager, virtual environment, or using poetry.
 
 ## How To Use
 - Make a new folder, call it whatever you want, put it wherever you want.
@@ -45,4 +51,5 @@ If you want to take a crack at it, you can email me: sheffplaysgames@gmail.com |
 ## Requirements
 
 - Python 3.9+
-- Pretty sure it's all standard library beyond that.
+- pandas
+- requests
