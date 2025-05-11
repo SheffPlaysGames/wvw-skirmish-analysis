@@ -14,6 +14,9 @@ Interpret at your own risk, with that caveat in mind.
 - World vs. World .csv Fragments: Expected file folder with an example of a .csv fragment that skirmish_analysis.py produces.
 - `README.md`: This file.
 
+If you don't want the code, and you just want the data, you can access the current version of the main .csv file here:
+https://mega.nz/folder/eJNmFYpR#ao9zp_t4Aek7v73xTFSQzA
+
 ## Features Engineered
 
 The base .json files contain information on kills, deaths, and score per skirmish.
