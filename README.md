@@ -23,6 +23,7 @@ The base .json files contain information on kills, deaths, and score per skirmis
 They also contain teamname, team color, link team name, tier, and region.
 I've also constructed extra information on skirmish ID (absolute and relative), day of week, hour, and any running events/holidays.
 I've also attempted to infer when there's sporadic API downtime based on periods where kills and deaths are both zero, but this is very hacky.
+A single instance of "API Downtime" is probably fine, but multiple skirmishes that all return "API Downtime" probably shouldn't be trusted.
 
 ## How To Use
 - Make a new folder, call it whatever you want, put it wherever you want.
@@ -36,6 +37,11 @@ I've also attempted to infer when there's sporadic API downtime based on periods
 I'd like to add different VP maps to the data, but I haven't done that yet.
 I'd like to add major WvW balance patches to see if they change activity levels, but I haven't done that yet.
 If you want to take a crack at it, you can email me: sheffplaysgames@gmail.com || Sheff on Discord
+
+## Caveats
+- "API Downtime" is a very hacky approach right now. See the features engineered section.
+- API data consistently disagrees with the in-game UI on kills/deaths. There's nothing that can be done about this.
+- 
 
 ## Requirements
 
