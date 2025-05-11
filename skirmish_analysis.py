@@ -7,14 +7,18 @@ Comments or questions about this code can be directed to
 sheffplaysgames@gmail.com or Sheff on Discord.
 """
 
+import argparse
 from datetime import datetime, timedelta
 import json
+import logging
 import pathlib
 import time
 
 # pypi libraries
 import pandas as pd
 import requests
+
+logging.basicConfig(level=logging.DEBUG)
 
 # Configure a session for retries and pipelining
 session = requests.Session()
@@ -41,11 +45,16 @@ all_csv_dir.mkdir(parents=True, exist_ok=True)
 # Skirmish 1 is the reset skirmish for all of these dictionaries.
 # TODO: Add VP values into the resulting .csv file.
 
+
 def convert_keys_to_int(skirm_dict):
     return dict((int(k), v) for k, v in skirm_dict.items())
+
+
 def dt(d):
     return datetime.strptime(d, "%Y-%m-%d")
 
+
+logging.debug("Loading Victory Point data")
 with open('lookup_tables/skirmish_vp.json', 'r') as fd:
     j = json.load(fd)
     skirmish_vp_old = convert_keys_to_int(j['initial'])
@@ -56,6 +65,7 @@ with open('lookup_tables/skirmish_vp.json', 'r') as fd:
     skirmish_vp_2025_na = convert_keys_to_int(j['2025na'])
     skirmish_vp_2025_eu = convert_keys_to_int(j['2025eu'])
 
+logging.debug("Loading Mappings (regions/borderlands/days of the week)")
 # Various mappings used to add context to the .json files.
 with open('lookup_tables/maps.json', 'r') as fd:
     j = json.load(fd)
@@ -63,6 +73,7 @@ with open('lookup_tables/maps.json', 'r') as fd:
     borderland_map = convert_keys_to_int(j['borderland_map'])
     weekday_map = convert_keys_to_int(j['weekday_map'])
 
+logging.debug("Loading GW2 Events and Holidays")
 # The "WvW Events" list contains the dates of special events that include
 #    bonuses to WvW XP or reward track progress.
 # The "Other Events" list contains the dates of PvP and PvE special events.
@@ -78,6 +89,7 @@ with open('lookup_tables/events.json', 'r') as fd:
     holidays = [(x[0], dt(x[1]), dt(x[2])) for x in j['holidays']]
     content_releases = [(x[0], dt(x[1])) for x in j['content_releases']]
 
+
 def get_match_ids():
     # Pulls a list of all available matches from the API.
     url_slug = "https://api.kills.werdes.net/api/matchlist/all"
@@ -86,8 +98,8 @@ def get_match_ids():
         response.raise_for_status()
         return [key.split('_')[-1] for key in response.json()]
     except requests.exceptions.RequestException as e:
-        print(f"Failed to fetch: {e}.")
-        return []
+        logging.error(f"Failed to fetch matches: {e}.")
+        raise  # fail out if we can't get matches, we know they exist
 
 
 def get_skirmish_data(match_id):
@@ -101,7 +113,7 @@ def get_skirmish_data(match_id):
         response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
-        print(f"Failed to fetch match {match_id}: {e}.")
+        logging.error(f"Failed to fetch match {match_id}: {e}.")
         return None
 
 
@@ -114,15 +126,15 @@ def build_source_data(output_dir=all_json_dir):
         filename = f"match_skirmish_data_{match_id}.json"
         filepath = output_dir / filename
         if filepath.exists():
-            print(f"{filename} already exists; skipping...")
+            logging.info(f"{filename} already exists; skipping...")
             continue
 
-        print(f"Requesting match {match_id}...")
+        logging.debug(f"Requesting match {match_id}...")
         skirmish_data = get_skirmish_data(match_id)
         time.sleep(.75)
 
         if skirmish_data is None:
-            print(f"[WARN] No data for match {match_id}.")
+            logging.warning(f"No data for match {match_id} or request failed.")
             continue
 
         # Compress the data (can be opened with 7z or bunzip on *nix)
@@ -135,21 +147,21 @@ def combine_jsons(input_dir=all_json_dir, output_file=merged_json_name):
     filenames = sorted(input_dir.glob("*.json"))
 
     if merged_json_name.exists():
-        print('Merged .json file already exists, skipping...')
+        logging.info(f'{merged_json_name} already exists, skipping...')
         return
 
     for n, filename in enumerate(filenames):
         file_path = input_dir / filename
 
         with open(file_path, 'r') as f_in:
-            print(f"Processing file {n + 1} of {len(filenames)}: {filename}.")
+            logging.info(f"Processing {n + 1}/{len(filenames)}: {filename}.")
 
             try:
                 data = json.load(f_in)
                 match_data_all.append(data)
             except json.JSONDecodeError as e:
-                print(
-                    f"[WARN] Skipping file {filename} due to JSON error: {e}.")
+                logging.warning(
+                    f"Skipping file {filename} due to JSON error: {e}.")
 
     with open(output_file, 'w') as f_out:
         json.dump(match_data_all, f_out)
@@ -242,6 +254,12 @@ def aggregate_timeslots(match_list):
 
 
 if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--verbose", "-v", action="count", default=0)
+    args = parser.parse_args()
+    loglv = {0: logging.WARNING, 1: logging.INFO, 2: logging.DEBUG}
+    logging.getLogger('root').setLevel(loglv[args.verbose])
     # These lines of code control the construction of the initial data files.
     # You do not need to run them if you just want to explore existing data.
     # If you need to rebuild the dataset, or add new matches to it, uncomment
@@ -249,18 +267,21 @@ if __name__ == '__main__':
 
     match_ids_list = get_match_ids()
     build_source_data()
-    combine_jsons()
 
-    with open(merged_json_name, 'r') as f:
-        matches = json.load(f)
-        batch_skirmish_list = []
+    # with open(merged_json_name, 'r') as f:
+    #     matches = json.load(f)
+    #     batch_skirmish_list = []
+    batch_skirmish_list = []
 
-    for i, match in enumerate(matches):
+    for i, f in enumerate(all_json_dir.glob("*.json")):
+        with open(f, 'r') as fd:
+            match = json.load(fd)
         batch_skirmish_list.extend(build_skirmish_data(match))
+        logging.debug(f"Created skirmish data for match {i} ({f})")
         if (i + 1) % 200 == 0:
-            print("Writing current chunk of skirmishes...")
+            logging.info(f"Writing chunk of skirmishes... {i+1}")
             df = aggregate_timeslots(batch_skirmish_list)
-            filepath = all_csv_dir / f'aggregated_match_chunk_{i}.csv'
+            filepath = all_csv_dir / f'aggregated_match_chunk_{i+1}.csv'
             df.to_csv(filepath, index=False)
             batch_skirmish_list = []
 
