@@ -17,7 +17,7 @@ Interpret at your own risk, with that caveat in mind.
 - `README.md`: This file.
 - pyproject.toml: Python Poetry package requirements data ( https://python-poetry.org/docs/#installing-with-the-official-installer )
 
-If you don't want the code, and you just want the data, you can access the current version of the main .csv file here:
+If you don't want the code, and you just want the data, you can access the current version of the main .csv and .json files here:
 https://mega.nz/folder/eJNmFYpR#ao9zp_t4Aek7v73xTFSQzA
 
 ## Features Engineered
