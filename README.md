@@ -33,9 +33,7 @@ A single instance of "API Downtime" is probably fine, but multiple skirmishes th
 The script requires pandas and requests.  Install them via your package manager, virtual environment, or using poetry.
 
 ## How To Use
-- Make a new folder, call it whatever you want, put it wherever you want.
-- Download "skirmish_analysis.py" and put it in this folder.
-- [Optionally] Download the World vs. World Per Match JSON Files and World vs. World .csv Fragments folders. Put them inside of the new folder you created.
+- Download this repository as a .zip file, and unzip it into your location of choice.
 - Run skirmish_analysis.py and wait about an hour and a half while the initial data compiles itself.
 - You can add subsequent skirmishes as they happen by re-running skirmish_analysis.py.
 
