@@ -13,6 +13,7 @@ Interpret at your own risk, with that caveat in mind.
 - wvw_per_match_json_files: Expected file folder with an example of a match skirmish included.
 - wvw_per_match_csv_files: Expected file folder with an example of a .csv fragment that skirmish_analysis.py produces.
 - merged: Expected file folder with the completed csv/json files.
+- lookup_tables: A collection of .json files that contain additional context about in-game events, content releases, ID lookups, and other necessary maps.
 - `README.md`: This file.
 - pyproject.toml: Python Poetry package requirements data ( https://python-poetry.org/docs/#installing-with-the-official-installer )
 
