@@ -2,7 +2,7 @@
 
 This repository contains code for analyzing Guild Wars 2's World vs. World (WvW) skirmish matches.
 I'd upload the data myself but the combined .csv files are about 250GB, and the combined .json files are about 2.6GB. Github doesn't like that.
-But fortunately, the code builds these files itself.
+But fortunately, MEGA will let me host up to 25GB for free, and the code builds these files itself if you want to do that instead.
 
 This code, and resulting data, is subject to the same existing limitations of the API, specifically, that reported kills/deaths do not match in-game reports.
 Interpret at your own risk, with that caveat in mind.
